@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import clickupExtendedService from '../services/clickupExtendedService';
-import { 
-  FolderIcon, 
-  TagIcon, 
-  ClockIcon, 
+import React, { useState, useEffect } from "react";
+import clickupExtendedService from "../services/clickupExtendedService";
+import {
+  FolderIcon,
+  TagIcon,
+  ClockIcon,
   UsersIcon,
   ChatBubbleLeftIcon,
-  CheckIcon
-} from '@heroicons/react/24/outline';
+  CheckIcon,
+} from "@heroicons/react/24/outline";
 
 const ApiCapabilitiesDemo = () => {
   const [workspace, setWorkspace] = useState(null);
@@ -15,10 +15,10 @@ const ApiCapabilitiesDemo = () => {
     timeTracking: null,
     members: [],
     goals: [],
-    spaces: []
+    spaces: [],
   });
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     loadCapabilities();
@@ -29,7 +29,7 @@ const ApiCapabilitiesDemo = () => {
     try {
       // Получаем базовую информацию
       const teams = await clickupExtendedService.getWorkspaces();
-      
+
       if (teams.length > 0) {
         const teamId = teams[0].id;
         setWorkspace(teams[0]);
@@ -39,18 +39,20 @@ const ApiCapabilitiesDemo = () => {
           clickupExtendedService.getWorkspaceMembers(teamId).catch(() => []),
           clickupExtendedService.getGoals(teamId).catch(() => []),
           clickupExtendedService.getSpaces(teamId).catch(() => []),
-          clickupExtendedService.getCurrentTimeTracking(teamId).catch(() => null)
+          clickupExtendedService
+            .getCurrentTimeTracking(teamId)
+            .catch(() => null),
         ]);
 
         setCapabilities({
           timeTracking: currentTracking,
           members,
           goals,
-          spaces
+          spaces,
         });
       }
     } catch (error) {
-      console.error('Ошибка загрузки возможностей:', error);
+      console.error("Ошибка загрузки возможностей:", error);
     } finally {
       setLoading(false);
     }
@@ -58,77 +60,78 @@ const ApiCapabilitiesDemo = () => {
 
   const demoFunctions = [
     {
-      title: 'Управление задачами',
+      title: "Управление задачами",
       icon: CheckIcon,
-      description: 'Создание, обновление, удаление задач с полным набором параметров',
+      description:
+        "Создание, обновление, удаление задач с полным набором параметров",
       features: [
-        'CRUD операции',
-        'Подзадачи и зависимости',
-        'Пользовательские поля',
-        'Автоматизация'
-      ]
+        "CRUD операции",
+        "Подзадачи и зависимости",
+        "Пользовательские поля",
+        "Автоматизация",
+      ],
     },
     {
-      title: 'Учет времени',
+      title: "Учет времени",
       icon: ClockIcon,
-      description: 'Продвинутое отслеживание времени и аналитика',
+      description: "Продвинутое отслеживание времени и аналитика",
       features: [
-        'Автоматический таймер',
-        'Ручные записи',
-        'Детальная аналитика',
-        'Billable/Non-billable'
-      ]
+        "Автоматический таймер",
+        "Ручные записи",
+        "Детальная аналитика",
+        "Billable/Non-billable",
+      ],
     },
     {
-      title: 'Структура проектов',
+      title: "Структура проектов",
       icon: FolderIcon,
-      description: 'Полное управление иерархией workspace',
+      description: "Полное управление иерархией workspace",
       features: [
-        'Spaces и Folders',
-        'Настройка прав доступа',
-        'Шаблоны проектов',
-        'Массовые операции'
-      ]
+        "Spaces и Folders",
+        "Настройка прав доступа",
+        "Шаблоны проектов",
+        "Массовые операции",
+      ],
     },
     {
-      title: 'Командная работа',
+      title: "Командная работа",
       icon: UsersIcon,
-      description: 'Управление участниками и коммуникацией',
+      description: "Управление участниками и коммуникацией",
       features: [
-        'Приглашение участников',
-        'Роли и права',
-        'Комментарии и упоминания',
-        'Уведомления'
-      ]
+        "Приглашение участников",
+        "Роли и права",
+        "Комментарии и упоминания",
+        "Уведомления",
+      ],
     },
     {
-      title: 'Теги и категории',
+      title: "Теги и категории",
       icon: TagIcon,
-      description: 'Система тегов для организации работы',
+      description: "Система тегов для организации работы",
       features: [
-        'Цветовая кодировка',
-        'Фильтрация по тегам',
-        'Автоматическое тегирование',
-        'Иерархия категорий'
-      ]
+        "Цветовая кодировка",
+        "Фильтрация по тегам",
+        "Автоматическое тегирование",
+        "Иерархия категорий",
+      ],
     },
     {
-      title: 'Интеграции',
+      title: "Интеграции",
       icon: ChatBubbleLeftIcon,
-      description: 'Webhooks и автоматизация',
+      description: "Webhooks и автоматизация",
       features: [
-        'Webhook события',
-        'Внешние интеграции',
-        'Автоматические действия',
-        'API для мобильных'
-      ]
-    }
+        "Webhook события",
+        "Внешние интеграции",
+        "Автоматические действия",
+        "API для мобильных",
+      ],
+    },
   ];
 
   const tabs = [
-    { id: 'overview', name: 'Обзор', icon: FolderIcon },
-    { id: 'analytics', name: 'Аналитика', icon: ClockIcon },
-    { id: 'automation', name: 'Автоматизация', icon: CheckIcon }
+    { id: "overview", name: "Обзор", icon: FolderIcon },
+    { id: "analytics", name: "Аналитика", icon: ClockIcon },
+    { id: "automation", name: "Автоматизация", icon: CheckIcon },
   ];
 
   if (loading) {
@@ -147,9 +150,10 @@ const ApiCapabilitiesDemo = () => {
           Возможности ClickUp API
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Ваш токен предоставляет доступ к мощному API с множеством функций для автоматизации и интеграции
+          Ваш токен предоставляет доступ к мощному API с множеством функций для
+          автоматизации и интеграции
         </p>
-        
+
         {workspace && (
           <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <h3 className="font-semibold text-blue-900 dark:text-blue-100">
@@ -157,21 +161,31 @@ const ApiCapabilitiesDemo = () => {
             </h3>
             <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-blue-600 dark:text-blue-400">Участники:</span>
-                <span className="ml-2 font-medium">{capabilities.members.length}</span>
+                <span className="text-blue-600 dark:text-blue-400">
+                  Участники:
+                </span>
+                <span className="ml-2 font-medium">
+                  {capabilities.members.length}
+                </span>
               </div>
               <div>
-                <span className="text-blue-600 dark:text-blue-400">Пространства:</span>
-                <span className="ml-2 font-medium">{capabilities.spaces.length}</span>
+                <span className="text-blue-600 dark:text-blue-400">
+                  Пространства:
+                </span>
+                <span className="ml-2 font-medium">
+                  {capabilities.spaces.length}
+                </span>
               </div>
               <div>
                 <span className="text-blue-600 dark:text-blue-400">Цели:</span>
-                <span className="ml-2 font-medium">{capabilities.goals.length}</span>
+                <span className="ml-2 font-medium">
+                  {capabilities.goals.length}
+                </span>
               </div>
               <div>
                 <span className="text-blue-600 dark:text-blue-400">Время:</span>
                 <span className="ml-2 font-medium">
-                  {capabilities.timeTracking ? 'Активно' : 'Остановлено'}
+                  {capabilities.timeTracking ? "Активно" : "Остановлено"}
                 </span>
               </div>
             </div>
@@ -191,8 +205,8 @@ const ApiCapabilitiesDemo = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                      : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                   }`}
                 >
                   <Icon className="h-5 w-5" />
@@ -204,12 +218,15 @@ const ApiCapabilitiesDemo = () => {
         </div>
 
         <div className="p-6">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {demoFunctions.map((func, index) => {
                 const Icon = func.icon;
                 return (
-                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div
+                    key={index}
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow"
+                  >
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
                         <Icon className="h-8 w-8 text-blue-500" />
@@ -223,7 +240,10 @@ const ApiCapabilitiesDemo = () => {
                         </p>
                         <ul className="space-y-1">
                           {func.features.map((feature, featureIndex) => (
-                            <li key={featureIndex} className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <li
+                              key={featureIndex}
+                              className="flex items-center text-sm text-gray-500 dark:text-gray-400"
+                            >
                               <CheckIcon className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
                               {feature}
                             </li>
@@ -237,13 +257,16 @@ const ApiCapabilitiesDemo = () => {
             </div>
           )}
 
-          {activeTab === 'analytics' && (
+          {activeTab === "analytics" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-                  <h3 className="text-lg font-semibold mb-2">Отчеты по времени</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Отчеты по времени
+                  </h3>
                   <p className="text-blue-100 text-sm">
-                    Детальная аналитика времени по пользователям, проектам и задачам
+                    Детальная аналитика времени по пользователям, проектам и
+                    задачам
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
@@ -266,7 +289,9 @@ const ApiCapabilitiesDemo = () => {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">Временная аналитика:</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white">
+                      Временная аналитика:
+                    </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                       <li>• Время по пользователям и проектам</li>
                       <li>• Распределение по часам дня</li>
@@ -275,7 +300,9 @@ const ApiCapabilitiesDemo = () => {
                     </ul>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">Проектная аналитика:</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white">
+                      Проектная аналитика:
+                    </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                       <li>• Прогресс по целям и задачам</li>
                       <li>• Загрузка участников</li>
@@ -288,7 +315,7 @@ const ApiCapabilitiesDemo = () => {
             </div>
           )}
 
-          {activeTab === 'automation' && (
+          {activeTab === "automation" && (
             <div className="space-y-6">
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
@@ -298,10 +325,18 @@ const ApiCapabilitiesDemo = () => {
                   Автоматические уведомления о событиях в ClickUp
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">taskCreated</div>
-                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">taskUpdated</div>
-                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">taskDeleted</div>
-                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">commentPosted</div>
+                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">
+                    taskCreated
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">
+                    taskUpdated
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">
+                    taskDeleted
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 p-3 rounded border">
+                    commentPosted
+                  </div>
                 </div>
               </div>
 
@@ -361,16 +396,26 @@ const ApiCapabilitiesDemo = () => {
 
       {/* Call to Action */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
-        <h3 className="text-xl font-bold mb-2">Готовы расширить функциональность?</h3>
+        <h3 className="text-xl font-bold mb-2">
+          Готовы расширить функциональность?
+        </h3>
         <p className="text-blue-100 mb-4">
-          Мы можем добавить любую из этих функций в ваше приложение. 
-          Выберите что нужно, и мы интегрируем это прямо сейчас!
+          Мы можем добавить любую из этих функций в ваше приложение. Выберите
+          что нужно, и мы интегрируем это прямо сейчас!
         </p>
         <div className="flex flex-wrap gap-2">
-          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">Webhooks</span>
-          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">Автоматизация</span>
-          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">Расширенная аналитика</span>
-          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">Управление проектами</span>
+          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+            Webhooks
+          </span>
+          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+            Автоматизация
+          </span>
+          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+            Расширенная аналитика
+          </span>
+          <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+            Управление проектами
+          </span>
         </div>
       </div>
     </div>

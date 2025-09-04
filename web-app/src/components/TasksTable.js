@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useSettings } from '../hooks/useSettings';
-import { 
-  ClipboardDocumentListIcon, 
-  ChevronDownIcon, 
+import React, { useState } from "react";
+import { useSettings } from "../hooks/useSettings";
+import {
+  ClipboardDocumentListIcon,
+  ChevronDownIcon,
   ChevronUpIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+  ClockIcon,
+} from "@heroicons/react/24/outline";
 
 const TasksTable = ({ data }) => {
   const { calculateEarnings, formatCurrency } = useSettings();
@@ -22,70 +22,85 @@ const TasksTable = ({ data }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      'to do': { bg: '#6b728020', text: '#6b7280', border: '#6b7280' },
-      'in progress': { bg: '#3b82f620', text: '#3b82f6', border: '#3b82f6' },
-      'done': { bg: '#10b98120', text: '#10b981', border: '#10b981' },
-      'testing': { bg: '#f59e0b20', text: '#f59e0b', border: '#f59e0b' },
-      'review': { bg: '#8b5cf620', text: '#8b5cf6', border: '#8b5cf6' }
+      "to do": { bg: "#6b728020", text: "#6b7280", border: "#6b7280" },
+      "in progress": { bg: "#3b82f620", text: "#3b82f6", border: "#3b82f6" },
+      done: { bg: "#10b98120", text: "#10b981", border: "#10b981" },
+      testing: { bg: "#f59e0b20", text: "#f59e0b", border: "#f59e0b" },
+      review: { bg: "#8b5cf620", text: "#8b5cf6", border: "#8b5cf6" },
     };
-    return colors[status] || colors['to do'];
+    return colors[status] || colors["to do"];
   };
 
   return (
-    <div 
+    <div
       className="scale-in rounded-xl overflow-hidden"
-      style={{ 
-        backgroundColor: 'var(--bg-primary)',
-        border: '1px solid var(--border-color)',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        border: "1px solid var(--border-color)",
+        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <div 
+      <div
         className="px-6 py-4 border-b"
-        style={{ borderColor: 'var(--border-color)' }}
+        style={{ borderColor: "var(--border-color)" }}
       >
         <div className="flex items-center">
-          <div 
+          <div
             className="p-2 rounded-lg mr-3"
-            style={{ backgroundColor: '#3b82f620' }}
+            style={{ backgroundColor: "#3b82f620" }}
           >
-            <ClipboardDocumentListIcon 
-              className="w-5 h-5" 
-              style={{ color: '#3b82f6' }}
+            <ClipboardDocumentListIcon
+              className="w-5 h-5"
+              style={{ color: "#3b82f6" }}
             />
           </div>
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <h3
+            className="text-lg font-semibold"
+            style={{ color: "var(--text-primary)" }}
+          >
             Детализация по задачам
           </h3>
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full">
-          <thead style={{ backgroundColor: 'var(--bg-secondary)' }}>
+          <thead style={{ backgroundColor: "var(--bg-secondary)" }}>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Задача
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Статус
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Время
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Стоимость
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Записей
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  style={{ color: 'var(--text-secondary)' }}>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Действия
               </th>
             </tr>
@@ -95,35 +110,42 @@ const TasksTable = ({ data }) => {
               const earnings = calculateEarnings(task.totalTime);
               const isExpanded = expandedTask === task.id;
               const statusColor = getStatusColor(task.status);
-              
+
               return (
                 <React.Fragment key={task.id || index}>
-                  <tr 
+                  <tr
                     className="transition-colors duration-200 hover:bg-opacity-50"
-                    style={{ 
-                      borderBottom: '1px solid var(--border-color)',
-                      backgroundColor: index % 2 === 0 ? 'transparent' : 'var(--bg-secondary)'
+                    style={{
+                      borderBottom: "1px solid var(--border-color)",
+                      backgroundColor:
+                        index % 2 === 0 ? "transparent" : "var(--bg-secondary)",
                     }}
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div>
-                          <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                          <div
+                            className="text-sm font-medium"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             {task.name}
                           </div>
-                          <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          <div
+                            className="text-sm"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
                             {task.list}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span 
+                      <span
                         className="inline-flex px-3 py-1 text-xs font-semibold rounded-full border"
-                        style={{ 
+                        style={{
                           backgroundColor: statusColor.bg,
                           color: statusColor.text,
-                          borderColor: statusColor.border
+                          borderColor: statusColor.border,
                         }}
                       >
                         {task.status}
@@ -131,21 +153,30 @@ const TasksTable = ({ data }) => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <ClockIcon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                        <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                        <ClockIcon
+                          className="w-4 h-4"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
+                        <span
+                          className="text-sm font-medium"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {formatTime(task.totalTime)}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                    <td
+                      className="px-6 py-4 text-sm font-medium"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {formatCurrency(earnings.net)}
                     </td>
                     <td className="px-6 py-4">
-                      <div 
+                      <div
                         className="inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium"
-                        style={{ 
-                          backgroundColor: '#3b82f620',
-                          color: '#3b82f6'
+                        style={{
+                          backgroundColor: "#3b82f620",
+                          color: "#3b82f6",
                         }}
                       >
                         {task.entries?.length || 0}
@@ -154,11 +185,15 @@ const TasksTable = ({ data }) => {
                     <td className="px-6 py-4">
                       {task.entries && task.entries.length > 0 && (
                         <button
-                          onClick={() => setExpandedTask(isExpanded ? null : task.id)}
+                          onClick={() =>
+                            setExpandedTask(isExpanded ? null : task.id)
+                          }
                           className="flex items-center space-x-1 px-3 py-1 rounded-lg transition-colors duration-200"
-                          style={{ 
-                            backgroundColor: isExpanded ? '#10b98120' : '#3b82f620',
-                            color: isExpanded ? '#10b981' : '#3b82f6'
+                          style={{
+                            backgroundColor: isExpanded
+                              ? "#10b98120"
+                              : "#3b82f620",
+                            color: isExpanded ? "#10b981" : "#3b82f6",
                           }}
                         >
                           {isExpanded ? (
@@ -167,44 +202,59 @@ const TasksTable = ({ data }) => {
                             <ChevronDownIcon className="w-4 h-4" />
                           )}
                           <span className="text-sm font-medium">
-                            {isExpanded ? 'Скрыть' : 'Показать'}
+                            {isExpanded ? "Скрыть" : "Показать"}
                           </span>
                         </button>
                       )}
                     </td>
                   </tr>
-                  
+
                   {isExpanded && task.entries && (
                     <tr>
-                      <td colSpan="6" className="px-6 py-4" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+                      <td
+                        colSpan="6"
+                        className="px-6 py-4"
+                        style={{ backgroundColor: "var(--bg-tertiary)" }}
+                      >
                         <div className="space-y-3">
-                          <h4 className="font-medium flex items-center space-x-2" style={{ color: 'var(--text-primary)' }}>
+                          <h4
+                            className="font-medium flex items-center space-x-2"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             <ClockIcon className="w-4 h-4" />
                             <span>Записи времени:</span>
                           </h4>
                           <div className="grid gap-3">
                             {task.entries.map((entry, entryIndex) => (
-                              <div 
-                                key={entryIndex} 
+                              <div
+                                key={entryIndex}
                                 className="flex justify-between items-center p-3 rounded-lg transition-all duration-200 hover:shadow-md"
-                                style={{ 
-                                  backgroundColor: 'var(--bg-primary)',
-                                  border: '1px solid var(--border-color)'
+                                style={{
+                                  backgroundColor: "var(--bg-primary)",
+                                  border: "1px solid var(--border-color)",
                                 }}
                               >
                                 <div className="flex-1">
-                                  <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                                    {entry.description || 'Без описания'}
+                                  <div
+                                    className="text-sm font-medium"
+                                    style={{ color: "var(--text-primary)" }}
+                                  >
+                                    {entry.description || "Без описания"}
                                   </div>
-                                  <div className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
-                                    {new Date(parseInt(entry.start)).toLocaleString('ru-RU')}
+                                  <div
+                                    className="text-xs mt-1"
+                                    style={{ color: "var(--text-secondary)" }}
+                                  >
+                                    {new Date(
+                                      parseInt(entry.start)
+                                    ).toLocaleString("ru-RU")}
                                   </div>
                                 </div>
-                                <div 
+                                <div
                                   className="text-sm font-medium px-3 py-1 rounded-full"
-                                  style={{ 
-                                    backgroundColor: '#10b98120',
-                                    color: '#10b981'
+                                  style={{
+                                    backgroundColor: "#10b98120",
+                                    color: "#10b981",
                                   }}
                                 >
                                   {formatTime(parseInt(entry.duration))}

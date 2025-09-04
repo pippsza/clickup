@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const defaultSettings = {
   hourlyRate: 25,
-  currency: 'USD',
-  taxRate: 0.2
+  currency: "USD",
+  taxRate: 0.2,
 };
 
 export const useSettings = () => {
   const [settings, setSettings] = useState(defaultSettings);
 
   useEffect(() => {
-    const saved = localStorage.getItem('clickup-settings');
+    const saved = localStorage.getItem("clickup-settings");
     if (saved) {
       try {
         setSettings({ ...defaultSettings, ...JSON.parse(saved) });
       } catch (error) {
-        console.error('Ошибка загрузки настроек:', error);
+        console.error("Ошибка загрузки настроек:", error);
       }
     }
   }, []);
@@ -23,7 +23,7 @@ export const useSettings = () => {
   const updateSettings = (newSettings) => {
     const updated = { ...settings, ...newSettings };
     setSettings(updated);
-    localStorage.setItem('clickup-settings', JSON.stringify(updated));
+    localStorage.setItem("clickup-settings", JSON.stringify(updated));
   };
 
   const calculateEarnings = (timeInMs) => {
@@ -35,18 +35,20 @@ export const useSettings = () => {
 
   const formatCurrency = (amount) => {
     const symbols = {
-      USD: '$',
-      EUR: '€',
-      UAH: '₴',
-      RUB: '₽'
+      USD: "$",
+      EUR: "€",
+      UAH: "₴",
+      RUB: "₽",
     };
-    return `${amount.toFixed(2)} ${symbols[settings.currency] || settings.currency}`;
+    return `${amount.toFixed(2)} ${
+      symbols[settings.currency] || settings.currency
+    }`;
   };
 
   return {
     settings,
     updateSettings,
     calculateEarnings,
-    formatCurrency
+    formatCurrency,
   };
 };

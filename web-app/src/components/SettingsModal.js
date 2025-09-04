@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useTheme } from '../contexts/ThemeContext';
+import React, { useState, useEffect } from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const SettingsModal = ({ show, settings, onSave, onClose }) => {
   const { theme, setTheme } = useTheme();
   const [formData, setFormData] = useState(settings);
-  const [tokenValue, setTokenValue] = useState('');
+  const [tokenValue, setTokenValue] = useState("");
 
   useEffect(() => {
     setFormData(settings);
     // Проверяем есть ли токен в переменных окружения
-    setTokenValue(process.env.REACT_APP_CLICKUP_TOKEN || '');
+    setTokenValue(process.env.REACT_APP_CLICKUP_TOKEN || "");
   }, [settings]);
 
   const handleSubmit = (e) => {
@@ -18,9 +18,9 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -30,7 +30,9 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Настройки</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            Настройки
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
@@ -54,7 +56,9 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
               disabled
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {tokenValue ? 'Токен найден в переменных окружения' : 'Добавьте REACT_APP_CLICKUP_TOKEN в .env файл'}
+              {tokenValue
+                ? "Токен найден в переменных окружения"
+                : "Добавьте REACT_APP_CLICKUP_TOKEN в .env файл"}
             </p>
           </div>
 
@@ -66,42 +70,54 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setTheme('light')}
+                onClick={() => setTheme("light")}
                 className={`p-3 rounded-lg border-2 transition-all ${
-                  theme === 'light'
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+                  theme === "light"
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
                 }`}
               >
                 <div className="flex items-center justify-center mb-2">
-                  <i className={`fas fa-sun text-2xl ${
-                    theme === 'light' ? 'text-blue-500' : 'text-gray-400'
-                  }`}></i>
+                  <i
+                    className={`fas fa-sun text-2xl ${
+                      theme === "light" ? "text-blue-500" : "text-gray-400"
+                    }`}
+                  ></i>
                 </div>
-                <div className={`text-sm font-medium ${
-                  theme === 'light' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                }`}>
+                <div
+                  className={`text-sm font-medium ${
+                    theme === "light"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
                   Светлая
                 </div>
               </button>
 
               <button
                 type="button"
-                onClick={() => setTheme('dark')}
+                onClick={() => setTheme("dark")}
                 className={`p-3 rounded-lg border-2 transition-all ${
-                  theme === 'dark'
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+                  theme === "dark"
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
                 }`}
               >
                 <div className="flex items-center justify-center mb-2">
-                  <i className={`fas fa-moon text-2xl ${
-                    theme === 'dark' ? 'text-blue-500' : 'text-gray-400'
-                  }`}></i>
+                  <i
+                    className={`fas fa-moon text-2xl ${
+                      theme === "dark" ? "text-blue-500" : "text-gray-400"
+                    }`}
+                  ></i>
                 </div>
-                <div className={`text-sm font-medium ${
-                  theme === 'dark' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                }`}>
+                <div
+                  className={`text-sm font-medium ${
+                    theme === "dark"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
                   Темная
                 </div>
               </button>
@@ -116,7 +132,9 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
             <input
               type="number"
               value={formData.hourlyRate}
-              onChange={(e) => handleInputChange('hourlyRate', parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                handleInputChange("hourlyRate", parseFloat(e.target.value) || 0)
+              }
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               min="0"
               step="0.01"
@@ -130,7 +148,7 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
             </label>
             <select
               value={formData.currency}
-              onChange={(e) => handleInputChange('currency', e.target.value)}
+              onChange={(e) => handleInputChange("currency", e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
               <option value="USD">USD ($)</option>
@@ -148,14 +166,20 @@ const SettingsModal = ({ show, settings, onSave, onClose }) => {
             <input
               type="number"
               value={formData.taxRate * 100}
-              onChange={(e) => handleInputChange('taxRate', (parseFloat(e.target.value) || 0) / 100)}
+              onChange={(e) =>
+                handleInputChange(
+                  "taxRate",
+                  (parseFloat(e.target.value) || 0) / 100
+                )
+              }
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               min="0"
               max="100"
               step="0.1"
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              К получению после налогов: {((1 - formData.taxRate) * 100).toFixed(1)}%
+              К получению после налогов:{" "}
+              {((1 - formData.taxRate) * 100).toFixed(1)}%
             </p>
           </div>
 

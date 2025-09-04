@@ -1,25 +1,25 @@
-import axios from 'axios';
+import axios from "axios";
 
 class ClickUpExtendedService {
   constructor() {
-    this.baseURL = 'https://api.clickup.com/api/v2';
+    this.baseURL = "https://api.clickup.com/api/v2";
     this.token = process.env.REACT_APP_CLICKUP_TOKEN;
-    
+
     this.api = axios.create({
       baseURL: this.baseURL,
       headers: {
-        'Authorization': this.token,
-        'Content-Type': 'application/json'
-      }
+        Authorization: this.token,
+        "Content-Type": "application/json",
+      },
     });
   }
 
   // ============== WORKSPACE & TEAMS ==============
-  
+
   // Получить все доступные workspace
   async getWorkspaces() {
     try {
-      const response = await this.api.get('/team');
+      const response = await this.api.get("/team");
       return response.data.teams;
     } catch (error) {
       throw new Error(`Ошибка получения workspace: ${error.message}`);
@@ -37,7 +37,7 @@ class ClickUpExtendedService {
   }
 
   // ============== SPACES (ПРОСТРАНСТВА) ==============
-  
+
   // Получить все пространства в workspace
   async getSpaces(teamId) {
     try {
@@ -63,10 +63,10 @@ class ClickUpExtendedService {
           custom_fields: { enabled: options.customFields || true },
           remap_dependencies: { enabled: options.remapDependencies || true },
           dependency_warning: { enabled: options.dependencyWarning || true },
-          portfolios: { enabled: options.portfolios || true }
-        }
+          portfolios: { enabled: options.portfolios || true },
+        },
       };
-      
+
       const response = await this.api.post(`/team/${teamId}/space`, data);
       return response.data;
     } catch (error) {
@@ -75,7 +75,7 @@ class ClickUpExtendedService {
   }
 
   // ============== FOLDERS (ПАПКИ) ==============
-  
+
   // Получить папки в пространстве
   async getFolders(spaceId) {
     try {
@@ -89,7 +89,9 @@ class ClickUpExtendedService {
   // Создать новую папку
   async createFolder(spaceId, name) {
     try {
-      const response = await this.api.post(`/space/${spaceId}/folder`, { name });
+      const response = await this.api.post(`/space/${spaceId}/folder`, {
+        name,
+      });
       return response.data;
     } catch (error) {
       throw new Error(`Ошибка создания папки: ${error.message}`);
@@ -97,7 +99,7 @@ class ClickUpExtendedService {
   }
 
   // ============== LISTS (СПИСКИ) ==============
-  
+
   // Получить списки в папке
   async getListsInFolder(folderId) {
     try {
@@ -119,9 +121,10 @@ class ClickUpExtendedService {
   }
 
   // Создать новый список
-  async createList(parent, name, type = 'folder') {
+  async createList(parent, name, type = "folder") {
     try {
-      const endpoint = type === 'folder' ? `/folder/${parent}/list` : `/space/${parent}/list`;
+      const endpoint =
+        type === "folder" ? `/folder/${parent}/list` : `/space/${parent}/list`;
       const response = await this.api.post(endpoint, { name });
       return response.data;
     } catch (error) {
@@ -130,14 +133,14 @@ class ClickUpExtendedService {
   }
 
   // ============== TASKS (ЗАДАЧИ) ==============
-  
+
   // Получить задачи из списка с фильтрами
   async getTasks(listId, options = {}) {
     try {
       const params = {
         archived: options.archived || false,
         include_closed: options.includeClosed || false,
-        orderby: options.orderBy || 'created',
+        orderby: options.orderBy || "created",
         reverse: options.reverse || false,
         subtasks: options.includeSubtasks || false,
         statuses: options.statuses || undefined,
@@ -148,7 +151,7 @@ class ClickUpExtendedService {
         date_created_gt: options.dateCreatedGt || undefined,
         date_created_lt: options.dateCreatedLt || undefined,
         date_updated_gt: options.dateUpdatedGt || undefined,
-        date_updated_lt: options.dateUpdatedLt || undefined
+        date_updated_lt: options.dateUpdatedLt || undefined,
       };
 
       const response = await this.api.get(`/list/${listId}/task`, { params });
@@ -163,10 +166,10 @@ class ClickUpExtendedService {
     try {
       const data = {
         name: taskData.name,
-        description: taskData.description || '',
+        description: taskData.description || "",
         assignees: taskData.assignees || [],
         tags: taskData.tags || [],
-        status: taskData.status || 'Open',
+        status: taskData.status || "Open",
         priority: taskData.priority || null,
         due_date: taskData.dueDate || null,
         due_date_time: taskData.dueDateWithTime || false,
@@ -176,7 +179,7 @@ class ClickUpExtendedService {
         notify_all: taskData.notifyAll || true,
         parent: taskData.parent || null,
         links_to: taskData.linksTo || null,
-        custom_fields: taskData.customFields || []
+        custom_fields: taskData.customFields || [],
       };
 
       const response = await this.api.post(`/list/${listId}/task`, data);
@@ -207,7 +210,7 @@ class ClickUpExtendedService {
   }
 
   // ============== COMMENTS (КОММЕНТАРИИ) ==============
-  
+
   // Получить комментарии к задаче
   async getTaskComments(taskId) {
     try {
@@ -224,7 +227,7 @@ class ClickUpExtendedService {
       const data = {
         comment_text: commentText,
         assignee: assignee,
-        notify_all: notifyAll
+        notify_all: notifyAll,
       };
 
       const response = await this.api.post(`/task/${taskId}/comment`, data);
@@ -235,17 +238,17 @@ class ClickUpExtendedService {
   }
 
   // ============== TIME TRACKING (УЧЕТ ВРЕМЕНИ) ==============
-  
+
   // Создать запись времени
   async createTimeEntry(taskId, timeData) {
     try {
       const data = {
-        description: timeData.description || '',
+        description: timeData.description || "",
         start: timeData.start, // timestamp в миллисекундах
         billable: timeData.billable || true,
         duration: timeData.duration || null, // в миллисекундах
         assignee: timeData.assignee || null,
-        tid: timeData.tid || null
+        tid: timeData.tid || null,
       };
 
       const response = await this.api.post(`/task/${taskId}/time`, data);
@@ -256,11 +259,11 @@ class ClickUpExtendedService {
   }
 
   // Начать отслеживание времени
-  async startTimeTracking(taskId, description = '') {
+  async startTimeTracking(taskId, description = "") {
     try {
       const data = {
         description,
-        billable: true
+        billable: true,
       };
 
       const response = await this.api.post(`/task/${taskId}/time`, data);
@@ -273,17 +276,23 @@ class ClickUpExtendedService {
   // Остановить отслеживание времени
   async stopTimeTracking(teamId) {
     try {
-      const response = await this.api.delete(`/team/${teamId}/time_entries/current`);
+      const response = await this.api.delete(
+        `/team/${teamId}/time_entries/current`
+      );
       return response.data;
     } catch (error) {
-      throw new Error(`Ошибка остановки отслеживания времени: ${error.message}`);
+      throw new Error(
+        `Ошибка остановки отслеживания времени: ${error.message}`
+      );
     }
   }
 
   // Получить текущее отслеживание времени
   async getCurrentTimeTracking(teamId) {
     try {
-      const response = await this.api.get(`/team/${teamId}/time_entries/current`);
+      const response = await this.api.get(
+        `/team/${teamId}/time_entries/current`
+      );
       return response.data;
     } catch (error) {
       return null; // Если нет активного отслеживания
@@ -291,7 +300,7 @@ class ClickUpExtendedService {
   }
 
   // ============== GOALS (ЦЕЛИ) ==============
-  
+
   // Получить цели
   async getGoals(teamId) {
     try {
@@ -307,10 +316,10 @@ class ClickUpExtendedService {
     try {
       const data = {
         name: goalData.name,
-        description: goalData.description || '',
+        description: goalData.description || "",
         due_date: goalData.dueDate || null,
         priority: goalData.priority || null,
-        color: goalData.color || '#32a852'
+        color: goalData.color || "#32a852",
       };
 
       const response = await this.api.post(`/team/${teamId}/goal`, data);
@@ -321,7 +330,7 @@ class ClickUpExtendedService {
   }
 
   // ============== MEMBERS (УЧАСТНИКИ) ==============
-  
+
   // Получить участников workspace
   async getWorkspaceMembers(teamId) {
     try {
@@ -337,7 +346,7 @@ class ClickUpExtendedService {
     try {
       const data = {
         email,
-        admin
+        admin,
       };
 
       const response = await this.api.post(`/team/${teamId}/member`, data);
@@ -348,14 +357,16 @@ class ClickUpExtendedService {
   }
 
   // ============== CUSTOM FIELDS (ПОЛЬЗОВАТЕЛЬСКИЕ ПОЛЯ) ==============
-  
+
   // Получить доступные пользовательские поля
   async getCustomFields(listId) {
     try {
       const response = await this.api.get(`/list/${listId}/field`);
       return response.data.fields;
     } catch (error) {
-      throw new Error(`Ошибка получения пользовательских полей: ${error.message}`);
+      throw new Error(
+        `Ошибка получения пользовательских полей: ${error.message}`
+      );
     }
   }
 
@@ -365,18 +376,20 @@ class ClickUpExtendedService {
       const data = {
         name: fieldData.name,
         type: fieldData.type, // text, textarea, number, currency, date, phone, email, url, dropdown, labels
-        type_config: fieldData.typeConfig || {}
+        type_config: fieldData.typeConfig || {},
       };
 
       const response = await this.api.post(`/list/${listId}/field`, data);
       return response.data;
     } catch (error) {
-      throw new Error(`Ошибка создания пользовательского поля: ${error.message}`);
+      throw new Error(
+        `Ошибка создания пользовательского поля: ${error.message}`
+      );
     }
   }
 
   // ============== WEBHOOKS (ВЕБ-ХУКИ) ==============
-  
+
   // Получить webhooks
   async getWebhooks(teamId) {
     try {
@@ -392,7 +405,7 @@ class ClickUpExtendedService {
     try {
       const data = {
         endpoint,
-        events // массив событий: taskCreated, taskUpdated, taskDeleted, taskCommentPosted и др.
+        events, // массив событий: taskCreated, taskUpdated, taskDeleted, taskCommentPosted и др.
       };
 
       const response = await this.api.post(`/team/${teamId}/webhook`, data);
@@ -403,18 +416,22 @@ class ClickUpExtendedService {
   }
 
   // ============== ATTACHMENTS (ВЛОЖЕНИЯ) ==============
-  
+
   // Прикрепить файл к задаче
   async attachFile(taskId, file, filename) {
     try {
       const formData = new FormData();
-      formData.append('attachment', file, filename);
+      formData.append("attachment", file, filename);
 
-      const response = await this.api.post(`/task/${taskId}/attachment`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await this.api.post(
+        `/task/${taskId}/attachment`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
 
       return response.data;
     } catch (error) {
@@ -423,14 +440,14 @@ class ClickUpExtendedService {
   }
 
   // ============== DEPENDENCIES (ЗАВИСИМОСТИ) ==============
-  
+
   // Создать зависимость между задачами
-  async createDependency(taskId, dependsOn, dependencyType = 'waiting_on') {
+  async createDependency(taskId, dependsOn, dependencyType = "waiting_on") {
     try {
       const data = {
         depends_on: dependsOn,
         dependency_of: taskId,
-        type: dependencyType // waiting_on, blocking
+        type: dependencyType, // waiting_on, blocking
       };
 
       const response = await this.api.post(`/task/${taskId}/dependency`, data);
@@ -441,7 +458,7 @@ class ClickUpExtendedService {
   }
 
   // ============== TAGS (ТЕГИ) ==============
-  
+
   // Получить теги пространства
   async getSpaceTags(spaceId) {
     try {
@@ -457,8 +474,8 @@ class ClickUpExtendedService {
     try {
       const data = {
         name: tagName,
-        tag_fg: '#FFFFFF',
-        tag_bg: tagColor || '#FF6900'
+        tag_fg: "#FFFFFF",
+        tag_bg: tagColor || "#FF6900",
       };
 
       const response = await this.api.post(`/space/${spaceId}/tag`, data);
@@ -469,7 +486,7 @@ class ClickUpExtendedService {
   }
 
   // ============== CHECKLISTS (ЧЕКЛИСТЫ) ==============
-  
+
   // Создать чеклист в задаче
   async createChecklist(taskId, name) {
     try {
@@ -486,10 +503,13 @@ class ClickUpExtendedService {
     try {
       const data = {
         name,
-        assignee
+        assignee,
       };
 
-      const response = await this.api.post(`/checklist/${checklistId}/checklist_item`, data);
+      const response = await this.api.post(
+        `/checklist/${checklistId}/checklist_item`,
+        data
+      );
       return response.data;
     } catch (error) {
       throw new Error(`Ошибка добавления элемента чеклиста: ${error.message}`);
@@ -497,12 +517,17 @@ class ClickUpExtendedService {
   }
 
   // ============== REPORTING & ANALYTICS ==============
-  
+
   // Получить расширенную аналитику времени
   async getAdvancedTimeAnalytics(teamId, startDate, endDate, userId = null) {
     try {
-      const timeEntries = await this.getTimeEntries(teamId, startDate, endDate, userId);
-      
+      const timeEntries = await this.getTimeEntries(
+        teamId,
+        startDate,
+        endDate,
+        userId
+      );
+
       // Группировка по различным критериям
       const analytics = {
         byUser: {},
@@ -517,30 +542,30 @@ class ClickUpExtendedService {
           nonBillableTime: 0,
           averageSessionLength: 0,
           longestSession: 0,
-          shortestSession: Infinity
-        }
+          shortestSession: Infinity,
+        },
       };
 
-      timeEntries.forEach(entry => {
+      timeEntries.forEach((entry) => {
         const duration = parseInt(entry.duration);
         const date = new Date(parseInt(entry.start));
         const hour = date.getHours();
         const dayOfWeek = date.getDay();
-        
+
         // По пользователям
-        const userId = entry.user?.id || 'unknown';
+        const userId = entry.user?.id || "unknown";
         if (!analytics.byUser[userId]) {
           analytics.byUser[userId] = {
-            name: entry.user?.username || 'Unknown',
+            name: entry.user?.username || "Unknown",
             totalTime: 0,
-            sessions: 0
+            sessions: 0,
           };
         }
         analytics.byUser[userId].totalTime += duration;
         analytics.byUser[userId].sessions++;
 
         // По проектам/спискам
-        const listName = entry.task?.list?.name || 'No List';
+        const listName = entry.task?.list?.name || "No List";
         if (!analytics.byProject[listName]) {
           analytics.byProject[listName] = { totalTime: 0, tasks: 0 };
         }
@@ -549,7 +574,7 @@ class ClickUpExtendedService {
 
         // По тегам
         if (entry.task?.tags) {
-          entry.task.tags.forEach(tag => {
+          entry.task.tags.forEach((tag) => {
             if (!analytics.byTag[tag.name]) {
               analytics.byTag[tag.name] = { totalTime: 0, tasks: 0 };
             }
@@ -559,7 +584,7 @@ class ClickUpExtendedService {
         }
 
         // По статусам
-        const status = entry.task?.status?.status || 'unknown';
+        const status = entry.task?.status?.status || "unknown";
         if (!analytics.byStatus[status]) {
           analytics.byStatus[status] = { totalTime: 0, tasks: 0 };
         }
@@ -591,7 +616,7 @@ class ClickUpExtendedService {
 
       // Средняя длительность сессии
       if (timeEntries.length > 0) {
-        analytics.productivity.averageSessionLength = 
+        analytics.productivity.averageSessionLength =
           analytics.productivity.totalTime / timeEntries.length;
       }
 
@@ -602,7 +627,7 @@ class ClickUpExtendedService {
   }
 
   // ============== UTILITY METHODS ==============
-  
+
   // Форматирование времени
   formatTime(milliseconds) {
     const totalMinutes = Math.floor(milliseconds / (1000 * 60));
@@ -623,7 +648,7 @@ class ClickUpExtendedService {
         workspace,
         members,
         goals,
-        spaces: []
+        spaces: [],
       };
 
       // Для каждого пространства получаем папки и списки
@@ -631,7 +656,7 @@ class ClickUpExtendedService {
         const spaceData = {
           ...space,
           folders: [],
-          lists: []
+          lists: [],
         };
 
         // Получаем папки
@@ -639,7 +664,7 @@ class ClickUpExtendedService {
         for (const folder of folders) {
           const folderData = {
             ...folder,
-            lists: await this.getListsInFolder(folder.id)
+            lists: await this.getListsInFolder(folder.id),
           };
           spaceData.folders.push(folderData);
         }

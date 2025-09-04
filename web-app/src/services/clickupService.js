@@ -1,37 +1,39 @@
-import axios from 'axios';
+import axios from "axios";
 
 class ClickUpService {
   constructor() {
-    this.baseURL = 'https://api.clickup.com/api/v2';
+    this.baseURL = "https://api.clickup.com/api/v2";
     this.token = process.env.REACT_APP_CLICKUP_TOKEN;
-    
+
     if (!this.token) {
-      console.warn('REACT_APP_CLICKUP_TOKEN не найден в переменных окружения');
+      console.warn("REACT_APP_CLICKUP_TOKEN не найден в переменных окружения");
     }
-    
+
     this.api = axios.create({
       baseURL: this.baseURL,
       headers: {
-        'Authorization': this.token,
-        'Content-Type': 'application/json'
-      }
+        Authorization: this.token,
+        "Content-Type": "application/json",
+      },
     });
   }
 
   // Получить информацию о пользователе
   async getUserInfo() {
     try {
-      const response = await this.api.get('/user');
+      const response = await this.api.get("/user");
       return response.data.user;
     } catch (error) {
-      throw new Error(`Ошибка получения информации о пользователе: ${error.message}`);
+      throw new Error(
+        `Ошибка получения информации о пользователе: ${error.message}`
+      );
     }
   }
 
   // Получить команды пользователя
   async getTeams() {
     try {
-      const response = await this.api.get('/team');
+      const response = await this.api.get("/team");
       return response.data.teams;
     } catch (error) {
       throw new Error(`Ошибка получения команд: ${error.message}`);
@@ -43,14 +45,16 @@ class ClickUpService {
     try {
       const params = {
         start_date: startDate,
-        end_date: endDate
+        end_date: endDate,
       };
-      
+
       if (userId) {
         params.assignee = userId;
       }
 
-      const response = await this.api.get(`/team/${teamId}/time_entries`, { params });
+      const response = await this.api.get(`/team/${teamId}/time_entries`, {
+        params,
+      });
       return response.data.data;
     } catch (error) {
       throw new Error(`Ошибка получения записей времени: ${error.message}`);
@@ -73,13 +77,13 @@ class ClickUpService {
     try {
       // Получаем пользователя
       const user = await this.getUserInfo();
-      
+
       // Если команда не указана, берем первую доступную
       let teams = [];
       if (!teamId) {
         teams = await this.getTeams();
         if (teams.length === 0) {
-          throw new Error('У пользователя нет доступных команд');
+          throw new Error("У пользователя нет доступных команд");
         }
         teamId = teams[0].id;
       }
@@ -87,34 +91,41 @@ class ClickUpService {
       // Определяем даты
       const startDate = new Date(year, month - 1, 1);
       const endDate = new Date(year, month, 0);
-      
+
       const startTimestamp = startDate.getTime();
-      const endTimestamp = endDate.getTime() + (24 * 60 * 60 * 1000) - 1;
+      const endTimestamp = endDate.getTime() + 24 * 60 * 60 * 1000 - 1;
 
       // Получаем записи времени
-      const timeEntries = await this.getTimeEntries(teamId, startTimestamp, endTimestamp, user.id);
+      const timeEntries = await this.getTimeEntries(
+        teamId,
+        startTimestamp,
+        endTimestamp,
+        user.id
+      );
 
       // Группируем по задачам
       const taskGroups = {};
       const dayGroups = {};
-      
+
       for (const entry of timeEntries) {
-        const taskId = entry.task?.id || 'no-task';
+        const taskId = entry.task?.id || "no-task";
         const entryDate = new Date(parseInt(entry.start));
-        const dateKey = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}-${String(entryDate.getDate()).padStart(2, '0')}`;
-        
+        const dateKey = `${entryDate.getFullYear()}-${String(
+          entryDate.getMonth() + 1
+        ).padStart(2, "0")}-${String(entryDate.getDate()).padStart(2, "0")}`;
+
         // Группировка по задачам
         if (!taskGroups[taskId]) {
           taskGroups[taskId] = {
             id: taskId,
-            name: entry.task?.name || 'Без задачи',
-            status: entry.task?.status?.status || 'unknown',
-            list: entry.task?.list?.name || 'Не указан',
+            name: entry.task?.name || "Без задачи",
+            status: entry.task?.status?.status || "unknown",
+            list: entry.task?.list?.name || "Не указан",
             totalTime: 0,
-            entries: []
+            entries: [],
           };
         }
-        
+
         taskGroups[taskId].totalTime += parseInt(entry.duration);
         taskGroups[taskId].entries.push(entry);
 
@@ -123,21 +134,21 @@ class ClickUpService {
           dayGroups[dateKey] = {
             date: dateKey,
             totalTime: 0,
-            tasks: new Set()
+            tasks: new Set(),
           };
         }
-        
+
         dayGroups[dateKey].totalTime += parseInt(entry.duration);
-        dayGroups[dateKey].tasks.add(entry.task?.name || 'Без задачи');
+        dayGroups[dateKey].tasks.add(entry.task?.name || "Без задачи");
       }
 
       // Преобразуем в массивы
       const tasks = Object.values(taskGroups);
       const days = Object.values(dayGroups)
-        .map(day => ({
+        .map((day) => ({
           ...day,
           tasks: Array.from(day.tasks),
-          dateObj: new Date(day.date) // Создаем Date из YYYY-MM-DD формата
+          dateObj: new Date(day.date), // Создаем Date из YYYY-MM-DD формата
         }))
         .sort((a, b) => a.dateObj - b.dateObj); // Сортируем по дате
 
@@ -146,31 +157,31 @@ class ClickUpService {
       return {
         user: {
           username: user.username,
-          email: user.email
+          email: user.email,
         },
         period: {
-          start: startDate.toLocaleDateString('ru-RU'),
-          end: endDate.toLocaleDateString('ru-RU'),
+          start: startDate.toLocaleDateString("ru-RU"),
+          end: endDate.toLocaleDateString("ru-RU"),
           month: month,
-          year: year
+          year: year,
         },
         summary: {
           totalTasks: tasks.length,
           totalTime: totalTime,
-          totalTimeFormatted: this.formatTime(totalTime)
+          totalTimeFormatted: this.formatTime(totalTime),
         },
         statistics: {
           totalEntries: timeEntries.length,
           workingDays: days.length,
           avgDayTime: days.length > 0 ? totalTime / days.length : 0,
           weekdayTime: totalTime,
-          weekendTime: 0
+          weekendTime: 0,
         },
         tasks: tasks,
-        days: days
+        days: days,
       };
     } catch (error) {
-      console.error('Ошибка генерации отчета:', error);
+      console.error("Ошибка генерации отчета:", error);
       throw error;
     }
   }
