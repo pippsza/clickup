@@ -30,6 +30,31 @@ const ChartsSection = ({ data }) => {
 
   if (!data || !data.days || !data.tasks) return null;
 
+  // Расчет средних значений
+  const totalDays = data.days.length;
+  const totalHours = data.days.reduce((sum, day) => sum + (day.totalTime / (1000 * 60 * 60)), 0);
+  const totalEarnings = data.days.reduce((sum, day) => sum + calculateEarnings(day.totalTime).net, 0);
+  const avgHoursPerDay = totalDays > 0 ? totalHours / totalDays : 0;
+  const avgEarningsPerDay = totalDays > 0 ? totalEarnings / totalDays : 0;
+
+  // Функция для копирования списка задач
+  const copyTasksList = async () => {
+    const tasksList = data.tasks.map(task => task.name).join(', ');
+    try {
+      await navigator.clipboard.writeText(tasksList);
+      alert('Список задач скопирован в буфер обмена!');
+    } catch (err) {
+      // Fallback для старых браузеров
+      const textArea = document.createElement('textarea');
+      textArea.value = tasksList;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Список задач скопирован в буфер обмена!');
+    }
+  };
+
   const colors = {
     gradients: [
       "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
@@ -91,7 +116,7 @@ const ChartsSection = ({ data }) => {
       },
       {
         label: "Заработок ($)",
-        data: data.days.map((day) => calculateEarnings(day.totalTime).gross),
+        data: data.days.map((day) => calculateEarnings(day.totalTime).net),
         backgroundColor: data.days.map(
           (_, index) => colors.solid.green + "80"
         ),
@@ -130,8 +155,8 @@ const ChartsSection = ({ data }) => {
           colors.solid.green,
           colors.solid.coral,
           colors.solid.mint,
-          colors.solid.rose,
-          colors.solid.peach,
+          colors.solid.violet,
+          colors.solid.amber,
         ],
         borderColor: "#ffffff",
         borderWidth: 4,
@@ -262,7 +287,8 @@ const ChartsSection = ({ data }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <div
         className="scale-in rounded-xl p-6 transition-all duration-300"
         style={{
@@ -289,6 +315,28 @@ const ChartsSection = ({ data }) => {
           </h3>
         </div>
         <Bar data={dayChartData} options={chartOptions} />
+        
+        {/* Средние значения */}
+        <div className="mt-6 pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+              <div className="text-2xl font-bold" style={{ color: colors.solid.purple }}>
+                {avgHoursPerDay.toFixed(1)}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Среднее часов/день
+              </div>
+            </div>
+            <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+              <div className="text-2xl font-bold" style={{ color: colors.solid.green }}>
+                ${avgEarningsPerDay.toFixed(0)}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Средний заработок/день
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div
@@ -318,7 +366,62 @@ const ChartsSection = ({ data }) => {
         </div>
         <Doughnut data={taskChartData} options={doughnutOptions} />
       </div>
+      </div>
+
+      {/* Список всех задач */}
+      <div 
+        className="scale-in rounded-xl p-6 transition-all duration-300"
+        style={{
+          backgroundColor: 'var(--bg-primary)',
+          border: '1px solid var(--border-color)',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+      <div className="flex items-center justify-between mb-4">
+        <h3 
+          className="text-lg font-semibold"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          📋 Все задачи за период ({data.tasks.length})
+        </h3>
+        <button
+          onClick={copyTasksList}
+          className="px-3 py-1 text-xs rounded-lg transition-all duration-200 hover:scale-105"
+          style={{
+            backgroundColor: 'var(--bg-tertiary)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-color)'
+          }}
+          title="Скопировать список задач"
+        >
+          📋 Копировать
+        </button>
+      </div>
+      <div 
+        className="text-sm leading-relaxed"
+        style={{ color: 'var(--text-secondary)' }}
+      >
+        {data.tasks.map((task, index) => (
+          <span key={task.id || index}>
+            <span 
+              className="hover:underline cursor-default"
+              style={{ color: 'var(--text-primary)' }}
+              title={`${(task.totalTime / (1000 * 60 * 60)).toFixed(2)} часов`}
+            >
+              {task.name}
+            </span>
+            {index < data.tasks.length - 1 && ', '}
+          </span>
+        ))}
+      </div>
+      <div 
+        className="mt-3 text-xs"
+        style={{ color: 'var(--text-secondary)' }}
+      >
+        💡 Наведите на задачу, чтобы увидеть количество часов
+      </div>
     </div>
+    </>
   );
 };
 

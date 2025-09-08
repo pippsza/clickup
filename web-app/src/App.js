@@ -8,6 +8,7 @@ import ChartsSection from "./components/ChartsSection";
 import TasksTable from "./components/TasksTable";
 import SettingsModal from "./components/SettingsModal";
 import ApiCapabilitiesDemo from "./components/ApiCapabilitiesDemo";
+import AllTimeAnalytics from "./components/AllTimeAnalytics";
 import clickupService from "./services/clickupService";
 import {
   ExclamationTriangleIcon,
@@ -82,7 +83,17 @@ function AppContent() {
                   : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
               }`}
             >
-              📊 Аналитика времени
+              📊 Аналитика за месяц
+            </button>
+            <button
+              onClick={() => setActiveTab("alltime")}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "alltime"
+                  ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+            >
+              📈 Динамика за все время
             </button>
             <button
               onClick={() => setActiveTab("api")}
@@ -317,6 +328,12 @@ function AppContent() {
               </div>
             )}
           </>
+        )}
+
+        {activeTab === "alltime" && (
+          <div className="py-8">
+            <AllTimeAnalytics />
+          </div>
         )}
 
         {activeTab === "api" && <ApiCapabilitiesDemo />}
